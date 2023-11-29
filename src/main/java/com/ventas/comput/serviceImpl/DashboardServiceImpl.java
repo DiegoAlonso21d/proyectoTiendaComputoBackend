@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.ventas.comput.dao.CategoriaDAO;
 import com.ventas.comput.dao.FacturaDAO;
 import com.ventas.comput.dao.ProductoDAO;
+import com.ventas.comput.dao.UsuarioDAO;
 import com.ventas.comput.service.DashboardService;
 
 import io.jsonwebtoken.Claims;
@@ -29,10 +30,15 @@ public class DashboardServiceImpl  implements DashboardService{
 	FacturaDAO facturaDao;
 	
 	
+	@Autowired
+	UsuarioDAO usuarioDao;
+	
 	@Override
 	public ResponseEntity<Map<String, Object>> getCount() {
 	
 		Map<String, Object> map  =  new HashMap<>();
+		
+		map.put("usuario", usuarioDao.count());
 		
 		map.put("categoria", categoriaDao.count());
 		

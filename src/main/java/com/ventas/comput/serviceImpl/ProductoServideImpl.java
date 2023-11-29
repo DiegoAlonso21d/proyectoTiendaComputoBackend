@@ -91,13 +91,7 @@ public class ProductoServideImpl implements ProductoService{
 		producto.setStock(Integer.parseInt(requestMap.get("stock")));
 		return producto;
 		
-		
-		
-		
-		
-		
-		
-		
+	
 		
 	}
 

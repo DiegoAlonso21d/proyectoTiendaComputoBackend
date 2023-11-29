@@ -52,7 +52,7 @@ protected SecurityFilterChain securityFilterChain ( HttpSecurity httpSecurity) t
 	.csrf().disable()
 	.authorizeHttpRequests()
 	.requestMatchers(
-			"/usuarios/login","/usuarios/register","/usuarios/forgotPassword","/dashboard/isTokenValid"
+			"/usuarios/login","/usuarios/register","/usuarios/forgotPassword","/dashboard/isTokenValid" ,"/productos/get" ,"/categorias/get"
 		
 			)
 	.permitAll()

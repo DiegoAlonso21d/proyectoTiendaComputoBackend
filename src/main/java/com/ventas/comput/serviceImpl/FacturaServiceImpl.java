@@ -3,6 +3,7 @@ package com.ventas.comput.serviceImpl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,12 +17,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
@@ -100,8 +103,9 @@ public class FacturaServiceImpl implements FacturaService{
 				
 				document.add(paragraph);
 		
-				PdfPTable table  = new PdfPTable(5);
+				PdfPTable table  = new PdfPTable(6);
 				
+				table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
 				table.setWidthPercentage(100);
 				
 				addTableHeader(table);
@@ -140,22 +144,57 @@ public class FacturaServiceImpl implements FacturaService{
 	}
 
 	private void addRows(PdfPTable table, Map<String, Object> data) {
-	    table.addCell((String) data.get("nombre"));
-	    table.addCell((String) data.get("categoria"));
-	    table.addCell(String.valueOf(data.get("cantidad"))); // Convertir a String directamente
-	    table.addCell(String.valueOf(data.get("precio"))); // Convertir a String directamente
-	    table.addCell(String.valueOf(data.get("total"))); // Convertir a String directamente
+		
+		
+		  Image image = null;
+
+		    try {
+		        image = Image.getInstance((String) data.get("image"));
+		        image.scaleToFit(50, 50); // Ajusta el tamaño de la imagen según sea necesario
+		        PdfPCell imageCell = new PdfPCell(image);
+		        imageCell.setBorder(Rectangle.NO_BORDER); // Elimina el borde de la celda de imagen
+		        table.addCell(imageCell);
+		        
+		        
+				
+				
+			    table.addCell((String) data.get("nombre"));
+			    table.addCell((String) data.get("categoria_nombre"));
+			    table.addCell(String.valueOf(data.get("cantidad"))); // Convertir a String directamente
+			    table.addCell(String.valueOf(data.get("precio"))); // Convertir a String directamente
+		        
+		        
+		    } catch (BadElementException | IOException e) {
+		        e.printStackTrace(); // Maneja errores al cargar la imagen
+		        table.addCell("N/A"); // Agrega "N/A" si hay un error al cargar la imagen
+		    }
+		
+		
+
+	    
+	    // Realizar la operación si ambos valores son números
+	    Object precio = data.get("precio");
+	    Object cantidad = data.get("cantidad");
+
+	    if (precio instanceof Number && cantidad instanceof Number) {
+	        double total = ((Number) precio).doubleValue() * ((Number) cantidad).doubleValue();
+	        table.addCell(String.valueOf(total));
+	    } else {
+	        // Manejar el caso en el que uno o ambos valores no sean números
+	        table.addCell("N/A");
+	    }
 	}
 
 	private void addTableHeader(PdfPTable table) {
 	
-		Stream.of("Nombre","Categoria","Cantidad","Precio","Sub Total")
+		Stream.of("Imagen","Nombre","Categoria","Cantidad","Precio","Sub Total")
 		.forEach(columnTitle -> {
 			PdfPCell header = new PdfPCell();
 			header.setBackgroundColor(BaseColor.LIGHT_GRAY);
-			header.setBorderWidth(2);
+			header.setBorderWidth(0);
 			header.setPhrase(new Phrase(columnTitle));
-			header.setBackgroundColor(BaseColor.YELLOW);
+			
+			
 			header.setHorizontalAlignment(Element.ALIGN_CENTER);
 			header.setVerticalAlignment(Element.ALIGN_CENTER);
 			table.addCell(header);
@@ -181,9 +220,9 @@ public class FacturaServiceImpl implements FacturaService{
 		
 		rect.enableBorderSide(8);
 		
-		rect.setBorderColor(BaseColor.BLACK);
+		rect.setBorderColor(BaseColor.WHITE);
 		
-		rect.setBorderWidth(1);
+		rect.setBorderWidth(0);
 		
 		document.add(rect);
 

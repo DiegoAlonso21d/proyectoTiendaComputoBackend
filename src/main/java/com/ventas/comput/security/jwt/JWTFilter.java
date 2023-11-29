@@ -40,7 +40,7 @@ public class JWTFilter  extends OncePerRequestFilter{
 			throws ServletException, IOException {
 
 			
-		if( request.getServletPath().matches("/usuarios/login|/usuarios/forgotPassword|/usuarios/register")) {
+		if( request.getServletPath().matches("/usuarios/login|/usuarios/forgotPassword|/usuarios/register|/productos/get")) {
 			filterChain.doFilter(request, response);
 		}else
 		{

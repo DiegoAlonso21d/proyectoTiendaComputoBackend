@@ -127,7 +127,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 		
 		usuario.setPassword(requestMap.get("password"));
 		
-		usuario.setEstado("false");
+		usuario.setEstado("true");
 		
 		usuario.setRole("usuario");
 		

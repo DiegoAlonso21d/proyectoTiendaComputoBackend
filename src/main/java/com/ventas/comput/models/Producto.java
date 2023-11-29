@@ -24,10 +24,10 @@ import lombok.Data;
 @NamedQuery(name = "Producto.updateProductStatus" , query = "update Producto p set p.estado=:estado where p.id=:id")
 
 
-@NamedQuery(name = "Producto.getProductByCategory", query = "select new com.ventas.comput.wrapper.ProductoWrapper(p.id,p.nombre) from Producto p where p.categoria.id=:id and p.estado='true'")
+@NamedQuery(name = "Producto.getProductByCategory", query = "select new com.ventas.comput.wrapper.ProductoWrapper(p.id,p.nombre,p.descripcion,p.precio,p.estado,p.categoria.id,p.categoria.nombre,p.image,p.stock) from Producto p where p.categoria.id=:id and p.estado='true'")
 
 
-@NamedQuery(name = "Producto.getProductById" , query = "select new com.ventas.comput.wrapper.ProductoWrapper(p.id,p.nombre,p.descripcion,p.precio,p.image,p.stock) from Producto p where p.id=:id")
+@NamedQuery(name = "Producto.getProductById" , query = "select new com.ventas.comput.wrapper.ProductoWrapper(p.id,p.nombre,p.descripcion,p.precio,p.estado,p.categoria.id,p.categoria.nombre,p.image,p.stock) from Producto p where p.id=:id")
 
 @Data
 @Entity
@@ -55,7 +55,7 @@ public class Producto  implements Serializable{
 	@Column(name = "descripcion")
 	private String descripcion;
 	
-	@Column(name = "image")
+	@Column(name = "image", length = 1000)
 	private String image;
 	
 	@Column(name = "precio")
